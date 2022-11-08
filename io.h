@@ -32,13 +32,28 @@
 #include <stdio.h>
 #include <string.h>
 
+/* NOTE(MJ): Define macOS as a UNIX */
+# if !defined(__unix__) && defined(__APPLE__) && defined(__MACH__)
+# define __unix__
+# endif
+
 /* TODO(MJ): We should probably factor this out better... */
-# ifdef __linux__
+# if defined(CUSTOM_IO)
+/* NOTE(MJ): Placeholder for custom IO functions e.g. UART */
+# elif defined(__unix__)
 #  include <curses.h>
 #  define _getch(ch) getch(ch)
+#  define _ungetch(ch) ungetch(ch)
 int _kbhit(void);
 # else
 #  include <conio.h>
 # endif
 
+# ifdef DEBUG 
+#  define TRACE(fmt,...) \
+  do { fprintf(stderr, "%s:%d:%s(): " fmt "\n", __FILE__, __LINE__, __func__, __VA_ARGS__); } while (0)
+# else
+  /* Do nothing */
+#  define TRACE(fmt)
+# endif
 #endif /* IO_H */

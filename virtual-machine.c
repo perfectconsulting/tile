@@ -343,6 +343,9 @@ void vm_execute(void)
 		else
 		{	
 			vm_ip++;
+
+TRACE("%s=%d","vm_ip",vm_ip);
+
 			(*opcode[vm_op])();
 		}
 	}

@@ -221,7 +221,7 @@ void build_dictionary()
 	word label_test;
 	word label_scratch;
 
-
+TRACE("%s","Words declared");
 
 	dp = 0x0;
 	last = 0x0;
@@ -231,6 +231,8 @@ void build_dictionary()
 	compile_word(0x100);
 
 	dp = 0x04;
+
+TRACE("%s","Cold start vector initialised");
 
 	compile_word(INITIAL_DP);				// DP
 	compile_word(0);						// STATE
@@ -246,7 +248,7 @@ void build_dictionary()
 	compile_word(0);
 
 	dp = 0x80;
-	
+
 	compile_header("dup");
 	_DUP
 	_RET
@@ -699,6 +701,8 @@ label_bfind = dp;
 	_LIT(0x0)
 	_RET
 	
+TRACE("%s","Headers compiled");
+
 label_test = dp;
 
 	compile_call(label_inline);
@@ -720,6 +724,8 @@ label_test = dp;
 
 	//compile_byte(VM_OPCODE_QKEY);
 	compile_byte(VM_OPCODE_HAULT);
+
+TRACE("%s","About to execute VM...");
 
 	vm_ip = label_test;
 	vm_execute();

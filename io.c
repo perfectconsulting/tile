@@ -25,14 +25,14 @@
 
 #include "io.h"
 
-#ifdef __linux__
+#ifdef __unix__
 int _kbhit(void) 
 {
-    char ch = getch();
+    char ch = _getch();
 
     if (ch != ERR) 
     {
-        ungetch(ch);
+        _ungetch(ch);
         return 1;
     }
 
