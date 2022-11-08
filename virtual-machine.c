@@ -314,7 +314,7 @@ void vm_init(void)
 	vm_state = VM_STATE_EXECUTE;
 	vm_ip = vm_bottom;
 
-	vm_debug = 0;
+	vm_debug = 1;
 }
 
 void vm_execute(void)
@@ -323,6 +323,8 @@ void vm_execute(void)
 	while(vm_state != VM_STATE_HAULT)
 	{
 		vm_op = ADDR_BYTE(vm_ip);
+
+TRACE("%s=%d","vm_op",vm_op);
 
 		if(vm_debug)
 		{

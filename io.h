@@ -54,6 +54,6 @@ int _kbhit(void);
   do { fprintf(stderr, "%s:%d:%s(): " fmt "\n", __FILE__, __LINE__, __func__, __VA_ARGS__); } while (0)
 # else
   /* Do nothing */
-#  define TRACE(fmt)
+#  define TRACE(fmt,...)
 # endif
 #endif /* IO_H */

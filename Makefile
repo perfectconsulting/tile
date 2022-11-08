@@ -1,5 +1,5 @@
 
-CFLAGS=-std=c99 -g -DDEBUG
+CFLAGS=-std=c99 -g 
 INCLUDES=-I.
 LIBS=-lcurses
 OBJECTS=tile2.o virtual-machine.o io.o
