@@ -33,26 +33,31 @@
 #include <string.h>
 
 /* NOTE(MJ): Define macOS as a UNIX */
-# if !defined(__unix__) && defined(__APPLE__) && defined(__MACH__)
-# define __unix__
-# endif
+#if !defined(__unix__) && defined(__APPLE__) && defined(__MACH__)
+#define __unix__
+#endif
 
 /* TODO(MJ): We should probably factor this out better... */
 # if defined(CUSTOM_IO)
 /* NOTE(MJ): Placeholder for custom IO functions e.g. UART */
-# elif defined(__unix__)
-#  define ungetch(ch) ungetc(ch,stdin)
+#elif defined(__unix__)
+#define ungetch(ch) ungetc(ch,stdin)
+
 int getch(void);
 int keypressed(void);
 # else
-#  include <conio.h>
-# endif
+#include <conio.h>
 
-# ifdef DEBUG 
-#  define TRACE(fmt,...) \
+#define getch() _getch()
+#define keypressed() _kbhit()
+#endif
+
+#ifdef DEBUG 
+#define TRACE(fmt,...) \
   do { fprintf(stderr, "%s:%d:%s(): " fmt "\n", __FILE__, __LINE__, __func__, __VA_ARGS__); } while (0)
-# else
-  /* Do nothing */
-#  define TRACE(fmt,...)
-# endif
+#else
+/* Do nothing */
+#define TRACE(fmt,...)
+#endif
+
 #endif /* IO_H */
