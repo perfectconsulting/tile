@@ -1,5 +1,5 @@
 /*
- * tile2.h
+ * io.h
  * Version 1.00 (C99)  
  * 
  * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
@@ -24,31 +24,40 @@
  */
 
  
-#ifndef TILE2_H
-#define TILE2_H
+#ifndef IO_H
+#define IO_H
 
-#ifdef __unix__
-#include <stdint.h>
-typedef uint16_t word;
-typedef int16_t sword;
-typedef uint8_t byte;
-typedef uint32_t dword;
-typedef int32_t sdword;
-#else
-typedef unsigned short word;
-typedef signed short sword;
-typedef unsigned char byte;
-typedef unsigned long dword;
-typedef signed long sdword;
+/* TODO(MJ): Placing standard libraries here, for now */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+
+/* NOTE(MJ): Define macOS as a UNIX */
+#if !defined(__unix__) && defined(__APPLE__) && defined(__MACH__)
+#define __unix__
 #endif
 
+/* TODO(MJ): We should probably factor this out better... */
+# if defined(CUSTOM_IO)
+/* NOTE(MJ): Placeholder for custom IO functions e.g. UART */
+#elif defined(__unix__)
+#define ungetch(ch) ungetc(ch,stdin)
 
-#define VM_MEMORY_SIZE			0xffff
-#define VM_STACK_GAP			0x40
+int getch(void);
+int keypressed(void);
+# else
+#include <conio.h>
 
-#define VM_STATE_EXECUTE		0
-#define VM_STATE_HAULT			1
+#define getch() _getch()
+#define keypressed() _kbhit()
+#endif
 
-#define VM_STACK_PROTECTION
+#ifdef DEBUG 
+#define TRACE(fmt,...) \
+  do { fprintf(stderr, "%s:%d:%s(): " fmt "\n", __FILE__, __LINE__, __func__, __VA_ARGS__); } while (0)
+#else
+/* Do nothing */
+#define TRACE(fmt,...)
+#endif
 
-#endif /* TILE2_H */
+#endif /* IO_H */

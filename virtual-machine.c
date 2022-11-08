@@ -1,7 +1,29 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <conio.h>
-#include <string.h>
+/*
+ * virtual-machine.c
+ * Version 1.00 (C99)  
+ * 
+ * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ */
+
+#include "io.h"
 #include "tile2.h"
 #include "op_codes.h"
 #include "helper_macros.h"
@@ -205,13 +227,13 @@ void vm_op_emit(void){
 }
 
 void vm_op_key(void){
-	ADDR_WORD(vm_sp) = _getch();
+	ADDR_WORD(vm_sp) = getch();
 	putchar(ADDR_WORD(vm_sp));
 	vm_sp -= 2;
 }
 
 void vm_op_qkey(void){
-	ADDR_WORD(vm_sp) = _kbhit() ? 0xffff : 0;
+	ADDR_WORD(vm_sp) = keypressed() ? 0xffff : 0;
 	vm_sp -= 2;
 }
 
@@ -292,7 +314,7 @@ void vm_init(void)
 	vm_state = VM_STATE_EXECUTE;
 	vm_ip = vm_bottom;
 
-	vm_debug = 0;
+	vm_debug = 1;
 }
 
 void vm_execute(void)
@@ -306,7 +328,7 @@ void vm_execute(void)
 		{
 			vm_debug_status();
 
-			c = _getch();
+			c = getch();
 			if(c == 'b')
 				c = 'b';
 
@@ -321,6 +343,7 @@ void vm_execute(void)
 		else
 		{	
 			vm_ip++;
+
 			(*opcode[vm_op])();
 		}
 	}

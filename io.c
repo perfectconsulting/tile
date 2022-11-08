@@ -1,5 +1,5 @@
 /*
- * tile2.h
+ * io.c
  * Version 1.00 (C99)  
  * 
  * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
@@ -23,32 +23,47 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  */
 
- 
-#ifndef TILE2_H
-#define TILE2_H
+#include "io.h"
 
 #ifdef __unix__
-#include <stdint.h>
-typedef uint16_t word;
-typedef int16_t sword;
-typedef uint8_t byte;
-typedef uint32_t dword;
-typedef int32_t sdword;
-#else
-typedef unsigned short word;
-typedef signed short sword;
-typedef unsigned char byte;
-typedef unsigned long dword;
-typedef signed long sdword;
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
+
+/*************************************************************************
+ * NOTE: Replace these functions for custom I/O e.g. UART                *
+ *************************************************************************/
+
+int getch(void) {
+    struct termios original, tile;
+    int ch;
+    
+    /* NOTE(MJ): Get original terminal I/O settings */
+    tcgetattr(STDIN_FILENO, &original); 
+    tile = original; 
+    tile.c_lflag &= ~(ICANON | ECHO); 
+    tile.c_cc[VTIME] = 0;
+    tile.c_cc[VMIN] = 0;
+    /* NOTE(MJ); Set new teminal I/O settings */
+    tcsetattr(STDIN_FILENO, TCSANOW, &tile); 
+    
+    ch = getc(stdin);
+ 
+    /* NOTE(MJ): Set original terminal I/O settings */   
+    tcsetattr(STDIN_FILENO, TCSANOW, &original);
+    
+    return ch;
+}
 #endif
 
+/* TODO(MJ): This hasn't been tested yet... */
+int keypressed(void) {
+    char ch = getch();
 
-#define VM_MEMORY_SIZE			0xffff
-#define VM_STACK_GAP			0x40
+    if (ch != EOF) {
+        ungetch(ch);
+        return 1;
+    }
 
-#define VM_STATE_EXECUTE		0
-#define VM_STATE_HAULT			1
-
-#define VM_STACK_PROTECTION
-
-#endif /* TILE2_H */
+    return 0;
+}

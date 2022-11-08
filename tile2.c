@@ -1,8 +1,32 @@
-#include <stdio.h>
-#include <string.h>
+/*
+ * tile2.c
+ * Version 1.00 (C99)  
+ * 
+ * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining
+ * a copy of this software and associated documentation files (the
+ * "Software"), to deal in the Software without restriction, including
+ * without limitation the rights to use, copy, modify, merge, publish,
+ * distribute, sublicense, and/or sell copies of the Software, and to
+ * permit persons to whom the Software is furnished to do so, subject to
+ * the following conditions:
+ * 
+ * The above copyright notice and this permission notice shall be
+ * included in all copies or substantial portions of the Software.
+ * 
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+ * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+ * NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+ * LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+ * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+ */
+
+#include "io.h"
 #include "tile2.h"
 #include "op_codes.h"
-#include "virtual_machine.h"
+#include "virtual-machine.h"
 #include "helper_macros.h"
 
 #define INITIAL_TIB				0x20
@@ -197,8 +221,6 @@ void build_dictionary()
 	word label_test;
 	word label_scratch;
 
-
-
 	dp = 0x0;
 	last = 0x0;
 
@@ -222,7 +244,7 @@ void build_dictionary()
 	compile_word(0);
 
 	dp = 0x80;
-	
+
 	compile_header("dup");
 	_DUP
 	_RET
