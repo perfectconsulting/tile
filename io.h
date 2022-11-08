@@ -1,5 +1,5 @@
 /*
- * tile2.h
+ * io.h
  * Version 1.00 (C99)  
  * 
  * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
@@ -24,22 +24,21 @@
  */
 
  
-#ifndef TILE2_H
-#define TILE2_H
+#ifndef IO_H
+#define IO_H
 
-typedef unsigned short word;
-typedef signed short sword;
-typedef unsigned char byte;
-typedef unsigned long dword;
-typedef signed long sdword;
+/* TODO(MJ): Placing standard libraries here, for now */
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
+/* TODO(MJ): We should probably factor this out better... */
+# ifdef __linux__
+#  include <curses.h>
+#  define _getch(ch) getch(ch)
+int _kbhit(void);
+# else
+#  include <conio.h>
+# endif
 
-# define VM_MEMORY_SIZE     0xffff
-# define VM_STACK_GAP       0x40
-
-# define VM_STATE_EXECUTE		0
-# define VM_STATE_HAULT			1
-
-# define VM_STACK_PROTECTION
-
-#endif /* TILE2_H */
+#endif /* IO_H */

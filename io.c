@@ -1,5 +1,5 @@
 /*
- * tile2.h
+ * io.c
  * Version 1.00 (C99)  
  * 
  * Copyright 2015 Steven James (www.perfectconsulting.co.uk)
@@ -23,23 +23,19 @@
  * OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
  */
 
- 
-#ifndef TILE2_H
-#define TILE2_H
+#include "io.h"
 
-typedef unsigned short word;
-typedef signed short sword;
-typedef unsigned char byte;
-typedef unsigned long dword;
-typedef signed long sdword;
+#ifdef __linux__
+int _kbhit(void) 
+{
+    char ch = getch();
 
+    if (ch != ERR) 
+    {
+        ungetch(ch);
+        return 1;
+    }
 
-# define VM_MEMORY_SIZE     0xffff
-# define VM_STACK_GAP       0x40
-
-# define VM_STATE_EXECUTE		0
-# define VM_STATE_HAULT			1
-
-# define VM_STACK_PROTECTION
-
-#endif /* TILE2_H */
+    return 0;
+}
+#endif
