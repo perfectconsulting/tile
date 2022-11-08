@@ -43,8 +43,6 @@ word vm_debug;
 
 byte *vm_base;
 
-FILE *vm_input;
-
 void vm_debug_status(void);
 
 void vm_op_noop(void){
