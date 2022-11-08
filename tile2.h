@@ -27,15 +27,24 @@
 #ifndef TILE2_H
 #define TILE2_H
 
+#ifdef __unix__
+#include <stdint.h>
+typedef uint16_t word;
+typedef int16_t sword;
+typedef uint8_t byte;
+typedef uint32_t dword;
+typedef int32_t sdword;
+#else
 typedef unsigned short word;
 typedef signed short sword;
 typedef unsigned char byte;
 typedef unsigned long dword;
 typedef signed long sdword;
+#endif
 
 
-# define VM_MEMORY_SIZE     0xffff
-# define VM_STACK_GAP       0x40
+# define VM_MEMORY_SIZE     	0xffff
+# define VM_STACK_GAP       	0x40
 
 # define VM_STATE_EXECUTE		0
 # define VM_STATE_HAULT			1

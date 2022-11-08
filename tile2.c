@@ -29,41 +29,41 @@
 #include "virtual-machine.h"
 #include "helper_macros.h"
 
-#define INITIAL_TIB		0x20
-#define INITIAL_DP		0x500
+#define INITIAL_TIB				0x20
+#define INITIAL_DP				0x500
 
 #define _DUP					compile_byte(VM_OPCODE_DUP);
 #define _SWAP					compile_byte(VM_OPCODE_SWAP);
 #define _ROT					compile_byte(VM_OPCODE_ROT);
 #define _DROP					compile_byte(VM_OPCODE_DROP);
 #define _OVER					compile_byte(VM_OPCODE_OVER);
-#define _RESET				compile_byte(VM_OPCODE_RESET);
+#define _RESET					compile_byte(VM_OPCODE_RESET);
 #define _TOR					compile_byte(VM_OPCODE_TOR);
-#define _RFROM				compile_byte(VM_OPCODE_RFROM);
+#define _RFROM					compile_byte(VM_OPCODE_RFROM);
 #define _RAT					compile_byte(VM_OPCODE_RAT);
 #define _RET					compile_byte(VM_OPCODE_RET);
-#define _CALL(n)			compile_call(n);
-#define _SCALL(n)			compile_scall(n);
+#define _CALL(n)				compile_call(n);
+#define _SCALL(n)				compile_scall(n);
 #define _ADD					compile_byte(VM_OPCODE_ADD);
 #define _SUB					compile_byte(VM_OPCODE_SUB);
 #define _MUL					compile_byte(VM_OPCODE_MUL);
 #define _DIV					compile_byte(VM_OPCODE_DIV);
 #define _MOD					compile_byte(VM_OPCODE_MOD);
-#define _LIT(n)				compile_lit(n);
+#define _LIT(n)					compile_lit(n);
 #define _AND					compile_byte(VM_OPCODE_AND);
 #define _OR						compile_byte(VM_OPCODE_OR);
 #define _XOR					compile_byte(VM_OPCODE_XOR);
 #define _NOT					compile_byte(VM_OPCODE_NOT);
-#define _EQUAL				compile_byte(VM_OPCODE_EQUAL);
+#define _EQUAL					compile_byte(VM_OPCODE_EQUAL);
 #define _LESS					compile_byte(VM_OPCODE_LESS);
-#define _GREATER			compile_byte(VM_OPCODE_GREATER);
-#define _FETCH				compile_byte(VM_OPCODE_FETCH);
-#define _CFETCH				compile_byte(VM_OPCODE_CFETCH);
-#define _STORE				compile_byte(VM_OPCODE_STORE);
-#define _CSTORE				compile_byte(VM_OPCODE_CSTORE);
+#define _GREATER				compile_byte(VM_OPCODE_GREATER);
+#define _FETCH					compile_byte(VM_OPCODE_FETCH);
+#define _CFETCH					compile_byte(VM_OPCODE_CFETCH);
+#define _STORE					compile_byte(VM_OPCODE_STORE);
+#define _CSTORE					compile_byte(VM_OPCODE_CSTORE);
 #define _KEY					compile_byte(VM_OPCODE_KEY);
-#define _DEBUG_INFO		compile_byte(VM_OPCODE_DEBUG);
-#define _HAULT				compile_byte(VM_OPCODE_HAULT);
+#define _DEBUG_INFO				compile_byte(VM_OPCODE_DEBUG);
+#define _HAULT					compile_byte(VM_OPCODE_HAULT);
 
 word dp;
 word last;
@@ -221,8 +221,6 @@ void build_dictionary()
 	word label_test;
 	word label_scratch;
 
-TRACE("%s","Words declared");
-
 	dp = 0x0;
 	last = 0x0;
 
@@ -231,8 +229,6 @@ TRACE("%s","Words declared");
 	compile_word(0x100);
 
 	dp = 0x04;
-
-TRACE("%s","Cold start vector initialised");
 
 	compile_word(INITIAL_DP);				// DP
 	compile_word(0);						// STATE
@@ -701,8 +697,6 @@ label_bfind = dp;
 	_LIT(0x0)
 	_RET
 	
-TRACE("%s","Headers compiled");
-
 label_test = dp;
 
 	compile_call(label_inline);
@@ -724,8 +718,6 @@ label_test = dp;
 
 	//compile_byte(VM_OPCODE_QKEY);
 	compile_byte(VM_OPCODE_HAULT);
-
-TRACE("%s","About to execute VM...");
 
 	vm_ip = label_test;
 	vm_execute();

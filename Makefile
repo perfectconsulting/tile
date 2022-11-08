@@ -1,7 +1,7 @@
 
 CFLAGS=-std=c99 -g 
 INCLUDES=-I.
-LIBS=-lcurses
+LIBS=
 OBJECTS=tile2.o virtual-machine.o io.o
 
 .c.o:                    

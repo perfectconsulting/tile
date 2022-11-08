@@ -43,6 +43,8 @@ word vm_debug;
 
 byte *vm_base;
 
+FILE *vm_input;
+
 void vm_debug_status(void);
 
 void vm_op_noop(void){
@@ -227,13 +229,13 @@ void vm_op_emit(void){
 }
 
 void vm_op_key(void){
-	ADDR_WORD(vm_sp) = _getch();
+	ADDR_WORD(vm_sp) = getch();
 	putchar(ADDR_WORD(vm_sp));
 	vm_sp -= 2;
 }
 
 void vm_op_qkey(void){
-	ADDR_WORD(vm_sp) = _kbhit() ? 0xffff : 0;
+	ADDR_WORD(vm_sp) = keypressed() ? 0xffff : 0;
 	vm_sp -= 2;
 }
 
@@ -324,13 +326,11 @@ void vm_execute(void)
 	{
 		vm_op = ADDR_BYTE(vm_ip);
 
-TRACE("%s=%d","vm_op",vm_op);
-
 		if(vm_debug)
 		{
 			vm_debug_status();
 
-			c = _getch();
+			c = getch();
 			if(c == 'b')
 				c = 'b';
 
@@ -345,8 +345,6 @@ TRACE("%s=%d","vm_op",vm_op);
 		else
 		{	
 			vm_ip++;
-
-TRACE("%s=%d","vm_ip",vm_ip);
 
 			(*opcode[vm_op])();
 		}

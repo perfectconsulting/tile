@@ -26,16 +26,44 @@
 #include "io.h"
 
 #ifdef __unix__
-int _kbhit(void) 
-{
-    char ch = _getch();
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
 
-    if (ch != ERR) 
-    {
-        _ungetch(ch);
+/*************************************************************************
+ * NOTE: Replace these functions for custom I/O e.g. UART                *
+ *************************************************************************/
+
+int getch(void) {
+    struct termios original, tile;
+    int ch;
+    
+    /* NOTE(MJ): Get original terminal I/O settings */
+    tcgetattr(STDIN_FILENO, &original); 
+    tile = original; 
+    tile.c_lflag &= ~(ICANON | ECHO); 
+    tile.c_cc[VTIME] = 0;
+    tile.c_cc[VMIN] = 0;
+    /* NOTE(MJ); Set new teminal I/O settings */
+    tcsetattr(STDIN_FILENO, TCSANOW, &tile); 
+    
+    ch = getc(stdin);
+ 
+    /* NOTE(MJ): Set original terminal I/O settings */   
+    tcsetattr(STDIN_FILENO, TCSANOW, &original);
+    
+    return ch;
+}
+#endif
+
+/* TODO(MJ): This hasn't been tested yet... */
+int keypressed(void) {
+    char ch = getch();
+
+    if (ch != EOF) {
+        ungetch(ch);
         return 1;
     }
 
     return 0;
 }
-#endif

@@ -41,10 +41,9 @@
 # if defined(CUSTOM_IO)
 /* NOTE(MJ): Placeholder for custom IO functions e.g. UART */
 # elif defined(__unix__)
-#  include <curses.h>
-#  define _getch(ch) getch(ch)
-#  define _ungetch(ch) ungetch(ch)
-int _kbhit(void);
+#  define ungetch(ch) ungetc(ch,stdin)
+int getch(void);
+int keypressed(void);
 # else
 #  include <conio.h>
 # endif
