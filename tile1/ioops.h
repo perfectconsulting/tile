@@ -12,6 +12,32 @@
  *	congfigure_term() unconfigure_term()
  */
 
+/* NOTE(MJ): Define macOS as a UNIX */
+#if !defined(__unix__) && defined(__APPLE__) && defined(__MACH__)
+#define __unix__
+#endif
+
+/* TODO(MJ): We should probably factor this out better... */
+# if defined(CUSTOM_IO)
+/* NOTE(MJ): Placeholder for custom IO functions e.g. UART */
+#elif defined(__unix__)
+#define ungetch(ch) ungetc(ch,stdin)
+
+int getch(void);
+int keypressed(void);
+# else
+#include <conio.h>
+
+#define getch() _getch()
+#define keypressed() _kbhit()
+#endif
+
+#ifdef __unix__
+#include <termios.h>
+#include <unistd.h>
+#include <stdio.h>
+#endif
+
 #define EMIT_OP	700
 #define KEY_OP	701
 #define INLINE_OP	702
@@ -26,6 +52,47 @@ struct file_elmt
 } ;
 
 struct file_elmt *file_ptr ;
+
+
+#ifdef __unix__
+/*************************************************************************
+ * NOTE: Replace these functions for custom I/O e.g. UART                *
+ *************************************************************************/
+
+int getch(void) {
+    struct termios original, tile;
+    int ch;
+    
+    /* NOTE(MJ): Get original terminal I/O settings */
+    tcgetattr(STDIN_FILENO, &original); 
+    tile = original; 
+    tile.c_lflag &= ~(ICANON | ECHO); 
+    tile.c_cc[VTIME] = 0;
+    tile.c_cc[VMIN] = 0;
+    /* NOTE(MJ); Set new teminal I/O settings */
+    tcsetattr(STDIN_FILENO, TCSANOW, &tile); 
+    
+    ch = getc(stdin);
+ 
+    /* NOTE(MJ): Set original terminal I/O settings */   
+    tcsetattr(STDIN_FILENO, TCSANOW, &original);
+    
+    return ch;
+}
+#endif
+
+/* TODO(MJ): This hasn't been tested yet... */
+int keypressed(void) {
+    char ch = getch();
+
+    if (ch != EOF) {
+        ungetch(ch);
+        return 1;
+    }
+
+    return 0;
+}
+
 
 /*
  *	Procedure to test if the current input stream is the terminal keyboard,
@@ -110,11 +177,7 @@ void key_op()
 #ifdef DEBUG
   printf("key opcode\n") ;
 #endif
-  noecho() ;
-  raw() ;
   push_ps ( getchar() ) ;
-  noraw() ;
-  echo() ;
 }
 
 /*
@@ -211,7 +274,7 @@ void string_op()
  */
 void configure_term()
 {
-  initscr() ;
+  /* NOTE: DO NOTHING */
 }
 
 /*
@@ -220,5 +283,5 @@ void configure_term()
  */
 void unconfigure_term()
 {
-  endwin() ;
+  /* NOTE: DO NOTHING */
 } 

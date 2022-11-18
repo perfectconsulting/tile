@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <strings.h>
 #include <ctype.h>
-#include <curses.h>
+#include "stddefs.h"
 #include "forward.h"
 #include "forthconst.h"
 #include "user.h"
